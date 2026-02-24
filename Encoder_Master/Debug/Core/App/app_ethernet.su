@@ -1,0 +1,12 @@
+../Core/App/app_ethernet.c:30:6:W5500_Select	8	static
+../Core/App/app_ethernet.c:35:6:W5500_Unselect	8	static
+../Core/App/app_ethernet.c:40:9:W5500_ReadByte	24	static
+../Core/App/app_ethernet.c:47:6:W5500_WriteByte	16	static
+../Core/App/app_ethernet.c:53:6:App_Ethernet_Init	56	static
+../Core/App/app_ethernet.c:80:6:App_Ethernet_Process	16	static
+../Core/App/app_ethernet.c:106:6:Process_Encoder_Sync_Server	56	static
+../Core/App/app_ethernet.c:154:6:Ethernet_Send_Command_To_LED	24	static
+../Core/App/app_ethernet.c:173:6:Get_Unique_MAC	24	static
+../Core/App/app_ethernet.c:184:6:cb_ip_assigned	32	static
+../Core/App/app_ethernet.c:195:6:cb_ip_conflict	8	static
+../Core/App/app_ethernet.c:203:6:Ethernet_Master_UDP_Receiver_Task	288	static

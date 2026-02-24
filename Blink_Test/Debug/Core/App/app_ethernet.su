@@ -1,0 +1,16 @@
+../Core/App/app_ethernet.c:33:6:W5500_Select	0	static
+../Core/App/app_ethernet.c:38:6:W5500_Unselect	0	static
+../Core/App/app_ethernet.c:43:9:W5500_ReadByte	24	static
+../Core/App/app_ethernet.c:51:6:W5500_WriteByte	16	static
+../Core/App/app_ethernet.c:243:6:cb_ip_conflict	0	static
+../Core/App/app_ethernet.c:220:6:cb_ip_assigned	40	static
+../Core/App/app_ethernet.c:55:6:W5500_Reset	8	static
+../Core/App/app_ethernet.c:247:6:Get_Unique_MAC	16	static
+../Core/App/app_ethernet.c:62:6:App_Ethernet_Init	72	static
+../Core/App/app_ethernet.c:264:6:Ethernet_UDP_Periodic_Task	104	static
+../Core/App/app_ethernet.c:318:6:Ethernet_UDP_Status	88	static
+../Core/App/app_ethernet.c:182:6:Parse_Ethernet_Commands	24	static
+../Core/App/app_ethernet.c:155:6:handle_encoder_socket	16	static
+../Core/App/app_ethernet.c:118:6:Process_Ethernet_Server	8	static
+../Core/App/app_ethernet.c:99:6:App_Ethernet_Process	8	static
+../Core/App/app_ethernet.c:127:6:handle_pc_socket	0	static

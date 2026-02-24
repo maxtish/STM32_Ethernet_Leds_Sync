@@ -1,0 +1,81 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{BC150CE2-BC7F-BB20-899B-A29BED553BB8}|WinFormsApp1\\WinFormsApp1.csproj|c:\\users\\maxti\\dev\\stm32\\winformsapp1\\winformsapp1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC150CE2-BC7F-BB20-899B-A29BED553BB8}|WinFormsApp1\\WinFormsApp1.csproj|solutionrelative:winformsapp1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC150CE2-BC7F-BB20-899B-A29BED553BB8}|WinFormsApp1\\WinFormsApp1.csproj|c:\\users\\maxti\\dev\\stm32\\winformsapp1\\winformsapp1\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BC150CE2-BC7F-BB20-899B-A29BED553BB8}|WinFormsApp1\\WinFormsApp1.csproj|solutionrelative:winformsapp1\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BC150CE2-BC7F-BB20-899B-A29BED553BB8}|WinFormsApp1\\WinFormsApp1.csproj|C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\winformsapp1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{BC150CE2-BC7F-BB20-899B-A29BED553BB8}|WinFormsApp1\\WinFormsApp1.csproj|solutionrelative:winformsapp1\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Form1.cs",
+              "ToolTip": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs [Design]",
+              "RelativeToolTip": "WinFormsApp1\\Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T23:11:06.241Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Form1.cs",
+              "ToolTip": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs",
+              "RelativeToolTip": "WinFormsApp1\\Form1.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAAAF4BAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T22:38:47.465Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Form1.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.Designer.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Form1.Designer.cs",
+              "ToolTip": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.Designer.cs",
+              "RelativeToolTip": "WinFormsApp1\\Form1.Designer.cs",
+              "ViewState": "AgIAAFAAAAAAAAAAAAAQwFwAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T23:03:23.843Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
