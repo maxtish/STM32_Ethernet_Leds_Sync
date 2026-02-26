@@ -1,7 +1,3 @@
-../Core/App/ws2812b.c:10:6:WS2812_Init	0	static
-../Core/App/ws2812b.c:14:6:WS2812_SetColor	12	static
-../Core/App/ws2812b.c:28:6:WS2812_Send	0	static
-../Core/App/ws2812b.c:33:6:WS2812_Clear	8	static
-../Core/App/ws2812b.c:80:6:WS2812_SetSimpleColor	0	static
-../Core/App/ws2812b.c:92:6:Get_Color_Data	12	static
-../Core/App/ws2812b.c:45:6:WS2812_Process_Dynamic_Run	24	static
+../Core/App/ws2812b.c:73:13:WS2812_SetSimpleColor.part.0	12	static
+../Core/App/ws2812b.c:28:6:WS2812_Init	0	static
+../Core/App/ws2812b.c:33:6:WS2812_Process_Dynamic_Run	24	static

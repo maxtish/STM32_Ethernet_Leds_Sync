@@ -36,10 +36,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-typedef enum {
-    EDIT_BRIGHTNESS = 0,
-    EDIT_COLOR = 1
-} EditTarget_t;
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

@@ -75,7 +75,7 @@ namespace WinFormsApp1
                 picColorWheel.Invalidate();
 
                 // 5. Лимит отправки пакетов
-                if ((DateTime.Now - lastSendTime).TotalMilliseconds > 40)
+                if ((DateTime.Now - lastSendTime).TotalMilliseconds > 250)
                 {
                     int valByte = (int)(currentAngle * 255 / 360);
                     SendCommand("$VAL:" + valByte);

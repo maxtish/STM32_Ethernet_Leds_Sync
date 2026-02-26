@@ -8,15 +8,12 @@
 #define PWM_LO    20
 #define RESET_LEN 50
 
+extern volatile uint8_t global_brightness;
+extern volatile uint8_t global_hue;
 
 
-// Прототипы функций
 void WS2812_Init(void);
-void WS2812_SetColor(uint16_t index, uint8_t r, uint8_t g, uint8_t b);
-void WS2812_SetSimpleColor(uint16_t index, uint8_t r, uint8_t g, uint8_t b);
-void WS2812_Send(void);
-void WS2812_Clear(void);
 void WS2812_Process_Dynamic_Run(void);
-void Get_Color_Data(uint8_t hue, uint8_t bright, uint8_t *r, uint8_t *g, uint8_t *b);
+
 
 #endif

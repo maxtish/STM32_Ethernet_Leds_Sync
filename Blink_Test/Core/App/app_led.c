@@ -1,10 +1,3 @@
-/*
- * app_led.c
- *
- *  Created on: 21.02.2026
- *      Author: maxti
- */
-
 #include "app_led.h"
 
 

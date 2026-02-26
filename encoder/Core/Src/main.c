@@ -22,12 +22,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>   // для sprintf
-#include <string.h>  // для strlen
-#include <stdbool.h>  // для bool
+
+#include <stdbool.h>
 #include "app_uart_logic.h"
-
-
 
 /* USER CODE END Includes */
 
@@ -58,9 +55,9 @@ uint8_t uart_rx_buffer[64];
 uint8_t uart_rx_index = 0;
 bool uart_is_collecting = false;
 volatile uint8_t uart_msg_ready = 0;
-/////
-int16_t encoder_value = 0;
-int16_t last_value = -1;
+
+volatile int16_t encoder_value = 0;
+volatile int16_t last_value = -1;
 
 /* USER CODE END PV */
 
@@ -111,10 +108,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
-	// Стартуем энкодер
+
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
 
-	// Запускаем UART (связь с соседом)
 	HAL_UART_Receive_IT(&huart1, &uart_rx_data, 1);
 
   /* USER CODE END 2 */
@@ -122,12 +118,9 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-		//////
 
 		Process_UART_Communication();
 
-
-		//////
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

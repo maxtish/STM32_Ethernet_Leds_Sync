@@ -1,7 +1,7 @@
 #ifndef APP_USB_LOG_H_
 #define APP_USB_LOG_H_
 
-#include "main.h" // Для доступа к HAL и типам данных
+#include "main.h"
 #include "usbd_cdc_if.h"
 #include <stdarg.h>
 #include <stdio.h>

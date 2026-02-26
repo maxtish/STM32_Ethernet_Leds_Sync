@@ -1,5 +1,4 @@
 Core/App/app_ethernet.o: ../Core/App/app_ethernet.c \
- C:/Users/maxti/dev/STM32/Blink_Test/Core/WIZNET/Internet/DHCP/dhcp.h \
  ../Core/App/app_ethernet.h ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
@@ -26,7 +25,6 @@ Core/App/app_ethernet.o: ../Core/App/app_ethernet.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h \
@@ -40,8 +38,9 @@ Core/App/app_ethernet.o: ../Core/App/app_ethernet.c \
  ../USB_DEVICE/Target/usbd_conf.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h \
- ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
-C:/Users/maxti/dev/STM32/Blink_Test/Core/WIZNET/Internet/DHCP/dhcp.h:
+ ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h \
+ C:/Users/maxti/dev/STM32/Blink_Test/Core/WIZNET/Internet/DHCP/dhcp.h \
+ ../Core/App/ws2812b.h
 ../Core/App/app_ethernet.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
@@ -69,7 +68,6 @@ C:/Users/maxti/dev/STM32/Blink_Test/Core/WIZNET/Internet/DHCP/dhcp.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h:
@@ -86,3 +84,5 @@ C:/Users/maxti/dev/STM32/Blink_Test/Core/WIZNET/Internet/DHCP/dhcp.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h:
 ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h:
+C:/Users/maxti/dev/STM32/Blink_Test/Core/WIZNET/Internet/DHCP/dhcp.h:
+../Core/App/ws2812b.h:

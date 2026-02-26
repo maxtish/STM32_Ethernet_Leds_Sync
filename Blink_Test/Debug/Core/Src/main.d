@@ -24,7 +24,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h \
@@ -42,10 +41,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Core/WIZNET/Ethernet/wizchip_conf.h \
  C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_log.h \
  C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_led.h \
- C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_logic.h \
- C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_log.h \
  C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_ethernet.h \
- C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_uart_logic.h \
+ C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_log.h \
  C:/Users/maxti/dev/STM32/Blink_Test/Core/App/ws2812b.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
@@ -73,7 +70,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_spi.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h:
@@ -93,8 +89,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/WIZNET/Ethernet/wizchip_conf.h:
 C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_log.h:
 C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_led.h:
-C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_logic.h:
-C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_log.h:
 C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_ethernet.h:
-C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_uart_logic.h:
+C:/Users/maxti/dev/STM32/Blink_Test/Core/App/app_usb_log.h:
 C:/Users/maxti/dev/STM32/Blink_Test/Core/App/ws2812b.h:

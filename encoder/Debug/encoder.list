@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 00000029  00000000  00000000  0000c1d0  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00015a5f  00000000  00000000  0000c1f9  2**0
+ 12 .debug_info   00015a8b  00000000  00000000  0000c1f9  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_abbrev 000039f7  00000000  00000000  00021c58  2**0
+ 13 .debug_abbrev 00003a1a  00000000  00000000  00021c84  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_aranges 000012f0  00000000  00000000  00025650  2**3
+ 14 .debug_aranges 000012f0  00000000  00000000  000256a0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_rnglists 00000e79  00000000  00000000  00026940  2**0
+ 15 .debug_rnglists 00000e79  00000000  00000000  00026990  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_macro  0001b3ae  00000000  00000000  000277b9  2**0
+ 16 .debug_macro  0001b26e  00000000  00000000  00027809  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00018db0  00000000  00000000  00042b67  2**0
+ 17 .debug_line   00018dac  00000000  00000000  00042a77  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    0008fa2f  00000000  00000000  0005b917  2**0
+ 18 .debug_str    0008fa2f  00000000  00000000  0005b823  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000eb346  2**0
+ 19 .comment      00000043  00000000  00000000  000eb252  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000055e8  00000000  00000000  000eb38c  2**2
+ 20 .debug_frame  000055e8  00000000  00000000  000eb298  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000051  00000000  00000000  000f0974  2**0
+ 21 .debug_line_str 00000051  00000000  00000000  000f0880  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -89,15 +89,12 @@ Disassembly of section .text:
 
 0800015c <Led_blinking>:
 #include "app_led_blinking.h"
-#include "main.h" // Нужно для доступа к HAL_GPIO и HAL_GetTick
+#include "main.h"
 
 void Led_blinking(void) {
  800015c:	b580      	push	{r7, lr}
  800015e:	af00      	add	r7, sp, #0
-
     static uint32_t last_tick = 0;
-
-
     if (HAL_GetTick() - last_tick >= 200) {
  8000160:	f000 fc64 	bl	8000a2c <HAL_GetTick>
  8000164:	4602      	mov	r2, r0
@@ -111,8 +108,6 @@ void Led_blinking(void) {
  8000174:	4603      	mov	r3, r0
  8000176:	4a04      	ldr	r2, [pc, #16]	@ (8000188 <Led_blinking+0x2c>)
  8000178:	6013      	str	r3, [r2, #0]
-
-
         HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
  800017a:	f44f 5100 	mov.w	r1, #8192	@ 0x2000
  800017e:	4803      	ldr	r0, [pc, #12]	@ (800018c <Led_blinking+0x30>)
@@ -125,18 +120,15 @@ void Led_blinking(void) {
  800018c:	40011000 	.word	0x40011000
 
 08000190 <Process_UART_Communication>:
+extern TIM_HandleTypeDef htim2;
 
 static uint32_t btn_timer = 0;
 static char uart_tx_buf[32];
-
 
 void Process_UART_Communication(void) {
  8000190:	b580      	push	{r7, lr}
  8000192:	b084      	sub	sp, #16
  8000194:	af00      	add	r7, sp, #0
-
-	// ПРИЕМ ДАННЫХ (из UART в систему) ---
-
 	if (uart_msg_ready) {
  8000196:	4b41      	ldr	r3, [pc, #260]	@ (800029c <Process_UART_Communication+0x10c>)
  8000198:	781b      	ldrb	r3, [r3, #0]
@@ -146,13 +138,10 @@ void Process_UART_Communication(void) {
 		Led_blinking();
  80001a0:	f7ff ffdc 	bl	800015c <Led_blinking>
 		int value;
-
 		USB_Printf("[UART RX] Получили: %s\r\n", (char*) uart_rx_buffer);
  80001a4:	493e      	ldr	r1, [pc, #248]	@ (80002a0 <Process_UART_Communication+0x110>)
  80001a6:	483f      	ldr	r0, [pc, #252]	@ (80002a4 <Process_UART_Communication+0x114>)
  80001a8:	f000 f896 	bl	80002d8 <USB_Printf>
-
-		// Парсим "VAL:125" (без знака $, так как коллбэк его отрезает)
 		if (sscanf((char*) uart_rx_buffer, "VAL:%d", &value) == 1) {
  80001ac:	1d3b      	adds	r3, r7, #4
  80001ae:	461a      	mov	r2, r3
@@ -177,7 +166,6 @@ void Process_UART_Communication(void) {
  80001ce:	23ff      	movs	r3, #255	@ 0xff
  80001d0:	607b      	str	r3, [r7, #4]
 
-			// 1. Устанавливаем аппаратный счетчик таймера в новое значение
 			__HAL_TIM_SET_COUNTER(&htim2, value);
  80001d2:	687a      	ldr	r2, [r7, #4]
  80001d4:	4b35      	ldr	r3, [pc, #212]	@ (80002ac <Process_UART_Communication+0x11c>)
@@ -190,17 +178,16 @@ void Process_UART_Communication(void) {
  80001e0:	801a      	strh	r2, [r3, #0]
 			last_value = encoder_value;
  80001e2:	4b33      	ldr	r3, [pc, #204]	@ (80002b0 <Process_UART_Communication+0x120>)
- 80001e4:	f9b3 2000 	ldrsh.w	r2, [r3]
+ 80001e4:	881b      	ldrh	r3, [r3, #0]
+ 80001e6:	b21a      	sxth	r2, r3
  80001e8:	4b32      	ldr	r3, [pc, #200]	@ (80002b4 <Process_UART_Communication+0x124>)
  80001ea:	801a      	strh	r2, [r3, #0]
-
 			USB_Printf("[UART] Установлено новое значение: %d\r\n", value);
  80001ec:	687b      	ldr	r3, [r7, #4]
  80001ee:	4619      	mov	r1, r3
  80001f0:	4831      	ldr	r0, [pc, #196]	@ (80002b8 <Process_UART_Communication+0x128>)
  80001f2:	f000 f871 	bl	80002d8 <USB_Printf>
 		}
-
 		memset(uart_rx_buffer, 0, sizeof(uart_rx_buffer));
  80001f6:	2240      	movs	r2, #64	@ 0x40
  80001f8:	2100      	movs	r1, #0
@@ -212,7 +199,6 @@ void Process_UART_Communication(void) {
  8000204:	701a      	strb	r2, [r3, #0]
 	}
 
-	// 2. Читаем АКТУАЛЬНОЕ значение из "железа"
 	encoder_value = (int16_t) __HAL_TIM_GET_COUNTER(&htim2);
  8000206:	4b29      	ldr	r3, [pc, #164]	@ (80002ac <Process_UART_Communication+0x11c>)
  8000208:	681b      	ldr	r3, [r3, #0]
@@ -220,19 +206,19 @@ void Process_UART_Communication(void) {
  800020c:	b21a      	sxth	r2, r3
  800020e:	4b28      	ldr	r3, [pc, #160]	@ (80002b0 <Process_UART_Communication+0x120>)
  8000210:	801a      	strh	r2, [r3, #0]
-
-
-
 	if (encoder_value != last_value) {
  8000212:	4b27      	ldr	r3, [pc, #156]	@ (80002b0 <Process_UART_Communication+0x120>)
- 8000214:	f9b3 2000 	ldrsh.w	r2, [r3]
+ 8000214:	881b      	ldrh	r3, [r3, #0]
+ 8000216:	b21a      	sxth	r2, r3
  8000218:	4b26      	ldr	r3, [pc, #152]	@ (80002b4 <Process_UART_Communication+0x124>)
- 800021a:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 800021a:	881b      	ldrh	r3, [r3, #0]
+ 800021c:	b21b      	sxth	r3, r3
  800021e:	429a      	cmp	r2, r3
  8000220:	d014      	beq.n	800024c <Process_UART_Communication+0xbc>
 		int len = sprintf(uart_tx_buf, "$VAL:%d\n", encoder_value);
  8000222:	4b23      	ldr	r3, [pc, #140]	@ (80002b0 <Process_UART_Communication+0x120>)
- 8000224:	f9b3 3000 	ldrsh.w	r3, [r3]
+ 8000224:	881b      	ldrh	r3, [r3, #0]
+ 8000226:	b21b      	sxth	r3, r3
  8000228:	461a      	mov	r2, r3
  800022a:	4924      	ldr	r1, [pc, #144]	@ (80002bc <Process_UART_Communication+0x12c>)
  800022c:	4824      	ldr	r0, [pc, #144]	@ (80002c0 <Process_UART_Communication+0x130>)
@@ -245,17 +231,14 @@ void Process_UART_Communication(void) {
  800023a:	4921      	ldr	r1, [pc, #132]	@ (80002c0 <Process_UART_Communication+0x130>)
  800023c:	4821      	ldr	r0, [pc, #132]	@ (80002c4 <Process_UART_Communication+0x134>)
  800023e:	f003 fc21 	bl	8003a84 <HAL_UART_Transmit>
-
-
-
 		last_value = encoder_value;
  8000242:	4b1b      	ldr	r3, [pc, #108]	@ (80002b0 <Process_UART_Communication+0x120>)
- 8000244:	f9b3 2000 	ldrsh.w	r2, [r3]
+ 8000244:	881b      	ldrh	r3, [r3, #0]
+ 8000246:	b21a      	sxth	r2, r3
  8000248:	4b1a      	ldr	r3, [pc, #104]	@ (80002b4 <Process_UART_Communication+0x124>)
  800024a:	801a      	strh	r2, [r3, #0]
 	}
 
-	// --- ЛОГИКА КНОПКИ (PA2) ---
 	if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_2) == GPIO_PIN_RESET) {
  800024c:	2104      	movs	r1, #4
  800024e:	481e      	ldr	r0, [pc, #120]	@ (80002c8 <Process_UART_Communication+0x138>)
@@ -316,9 +299,6 @@ void Process_UART_Communication(void) {
  80002d4:	0800a1b0 	.word	0x0800a1b0
 
 080002d8 <USB_Printf>:
- *      Author: maxti
- */
-
 #include "app_usb_log.h"
 
 void USB_Printf(const char *format, ...) {
@@ -419,22 +399,21 @@ int main(void)
   MX_USB_DEVICE_Init();
  8000370:	f008 f8a4 	bl	80084bc <MX_USB_DEVICE_Init>
   /* USER CODE BEGIN 2 */
-	// Стартуем энкодер
+
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
  8000374:	213c      	movs	r1, #60	@ 0x3c
  8000376:	4805      	ldr	r0, [pc, #20]	@ (800038c <main+0x34>)
  8000378:	f003 f9b6 	bl	80036e8 <HAL_TIM_Encoder_Start>
 
-	// Запускаем UART (связь с соседом)
 	HAL_UART_Receive_IT(&huart1, &uart_rx_data, 1);
  800037c:	2201      	movs	r2, #1
  800037e:	4904      	ldr	r1, [pc, #16]	@ (8000390 <main+0x38>)
  8000380:	4804      	ldr	r0, [pc, #16]	@ (8000394 <main+0x3c>)
  8000382:	f003 fc0a 	bl	8003b9a <HAL_UART_Receive_IT>
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
-		//////
 
 		Process_UART_Communication();
  8000386:	f7ff ff03 	bl	8000190 <Process_UART_Communication>

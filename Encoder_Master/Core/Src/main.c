@@ -62,32 +62,11 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
-uint8_t ethernet_tx_wait_text_flag = 0; //import в app_usb_logic.c  Флаг события для ETHERNET на начало сбора текста и мигания диода на отправляющей плате
-uint8_t rx_buf[1024]; // import в app_ethernet.c - буфер ПРИЕМ ДАННЫХ ИЗ ETHERNET
-uint8_t neighbor_ip[4] = {0, 0, 0, 0}; // Сюда сохраним адрес соседа
-///ДЛЯ UART app_uart_data
 uint8_t uart_rx_data;
 uint8_t uart_rx_buffer[64];
 uint8_t uart_rx_index = 0;
 bool uart_is_collecting = false;
 volatile uint8_t uart_msg_ready = 0;
-////ДЛЯ РЕЖИМОВ
-
-///тест
-uint32_t last_send_tick = 0;
-int16_t test_val = 0;
-
-EditTarget_t current_edit_target = EDIT_BRIGHTNESS;
-
-// Итоговые значения для ленты
-uint8_t global_brightness = 50;
-uint8_t global_hue = 127;
-
-
-
-
-#define BLINK_FAST       200
-#define BLINK_SLOW       1000
 
 /* USER CODE END PV */
 
@@ -140,22 +119,8 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-
-
-
-	// Запускаем UART (связь с соседом)
-	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
-
-
-	// Запускаем Ethernet////W5500
-	App_Ethernet_Init();
-
-
-
-
-
-
-
+  HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+  App_Ethernet_Init();
 
   /* USER CODE END 2 */
 
@@ -164,19 +129,9 @@ int main(void)
 
 	while (1) {
 
-
-
-
-
-
 		App_Ethernet_Process();
 		Process_USB_To_Interfaces();
 		Process_UART_Communication();
-		Ethernet_Master_UDP_Receiver_Task();
-
-
-
-
 
 	}
 

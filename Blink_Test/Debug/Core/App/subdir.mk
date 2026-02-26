@@ -7,25 +7,19 @@
 C_SRCS += \
 ../Core/App/app_ethernet.c \
 ../Core/App/app_led.c \
-../Core/App/app_uart_logic.c \
 ../Core/App/app_usb_log.c \
-../Core/App/app_usb_logic.c \
 ../Core/App/ws2812b.c 
 
 OBJS += \
 ./Core/App/app_ethernet.o \
 ./Core/App/app_led.o \
-./Core/App/app_uart_logic.o \
 ./Core/App/app_usb_log.o \
-./Core/App/app_usb_logic.o \
 ./Core/App/ws2812b.o 
 
 C_DEPS += \
 ./Core/App/app_ethernet.d \
 ./Core/App/app_led.d \
-./Core/App/app_uart_logic.d \
 ./Core/App/app_usb_log.d \
-./Core/App/app_usb_logic.d \
 ./Core/App/ws2812b.d 
 
 
@@ -36,7 +30,7 @@ Core/App/%.o Core/App/%.su Core/App/%.cyclo: ../Core/App/%.c Core/App/subdir.mk
 clean: clean-Core-2f-App
 
 clean-Core-2f-App:
-	-$(RM) ./Core/App/app_ethernet.cyclo ./Core/App/app_ethernet.d ./Core/App/app_ethernet.o ./Core/App/app_ethernet.su ./Core/App/app_led.cyclo ./Core/App/app_led.d ./Core/App/app_led.o ./Core/App/app_led.su ./Core/App/app_uart_logic.cyclo ./Core/App/app_uart_logic.d ./Core/App/app_uart_logic.o ./Core/App/app_uart_logic.su ./Core/App/app_usb_log.cyclo ./Core/App/app_usb_log.d ./Core/App/app_usb_log.o ./Core/App/app_usb_log.su ./Core/App/app_usb_logic.cyclo ./Core/App/app_usb_logic.d ./Core/App/app_usb_logic.o ./Core/App/app_usb_logic.su ./Core/App/ws2812b.cyclo ./Core/App/ws2812b.d ./Core/App/ws2812b.o ./Core/App/ws2812b.su
+	-$(RM) ./Core/App/app_ethernet.cyclo ./Core/App/app_ethernet.d ./Core/App/app_ethernet.o ./Core/App/app_ethernet.su ./Core/App/app_led.cyclo ./Core/App/app_led.d ./Core/App/app_led.o ./Core/App/app_led.su ./Core/App/app_usb_log.cyclo ./Core/App/app_usb_log.d ./Core/App/app_usb_log.o ./Core/App/app_usb_log.su ./Core/App/ws2812b.cyclo ./Core/App/ws2812b.d ./Core/App/ws2812b.o ./Core/App/ws2812b.su
 
 .PHONY: clean-Core-2f-App
 

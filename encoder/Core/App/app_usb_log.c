@@ -1,10 +1,3 @@
-/*
- * app_usb_log.c
- *
- *  Created on: 21.02.2026
- *      Author: maxti
- */
-
 #include "app_usb_log.h"
 
 void USB_Printf(const char *format, ...) {

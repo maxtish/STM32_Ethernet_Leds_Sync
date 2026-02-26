@@ -22,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -38,25 +38,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs",
-              "RelativeDocumentMoniker": "WinFormsApp1\\Form1.cs",
-              "ToolTip": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs [Design]",
-              "RelativeToolTip": "WinFormsApp1\\Form1.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-21T23:11:06.241Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Form1.cs",
               "DocumentMoniker": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs",
               "RelativeDocumentMoniker": "WinFormsApp1\\Form1.cs",
               "ToolTip": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs",
               "RelativeToolTip": "WinFormsApp1\\Form1.cs",
-              "ViewState": "AgIAAEEBAAAAAAAAAAAwwF4BAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAADEAAAAAAAAAAAA5wEMAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-21T22:38:47.465Z",
               "EditorCaption": ""
@@ -72,6 +60,18 @@
               "ViewState": "AgIAAFAAAAAAAAAAAAAQwFwAAAA+AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-02-21T23:03:23.843Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs",
+              "RelativeDocumentMoniker": "WinFormsApp1\\Form1.cs",
+              "ToolTip": "C:\\Users\\maxti\\dev\\STM32\\WinFormsApp1\\WinFormsApp1\\Form1.cs [Design]",
+              "RelativeToolTip": "WinFormsApp1\\Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-21T23:11:06.241Z",
+              "EditorCaption": " [Design]"
             }
           ]
         }

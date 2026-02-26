@@ -28,9 +28,9 @@
 #include "socket.h"
 #include "app_usb_log.h"
 #include "app_led.h"
-#include "app_usb_logic.h"
+
 #include "app_ethernet.h"
-#include "app_uart_logic.h"
+
 #include <stdbool.h>
 #include <ws2812b.h>
 
@@ -62,10 +62,9 @@ SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim2;
 DMA_HandleTypeDef hdma_tim2_ch1;
 
-UART_HandleTypeDef huart2;
-
 /* USER CODE BEGIN PV */
 
+/*
 uint8_t ethernet_tx_wait_text_flag = 0; //import в app_usb_logic.c  Флаг события для ETHERNET на начало сбора текста и мигания диода на отправляющей плате
 uint8_t text_buffer[128];        //import в app_uart_data  Массив для хранения текста
 uint8_t ethernet_text_buffer[128];     //import в app_usb_logic.c Массив для хранения текстадля ethernet
@@ -79,18 +78,9 @@ uint8_t uart_rx_buffer[64];
 uint8_t uart_rx_index = 0;
 bool uart_is_collecting = false;
 volatile uint8_t uart_msg_ready = 0;
-////ДЛЯ РЕЖИМОВ
+*/
 
-EditTarget_t current_edit_target = EDIT_BRIGHTNESS;
-
-// Итоговые значения для ленты
-volatile uint8_t global_brightness = 50;
-volatile uint8_t global_hue = 127;
-
-
-
-#define BLINK_FAST       200
-#define BLINK_SLOW       1000
+EditTarget_t current_edit_target = EDIT_BRIGHTNESS; ////ДЛЯ РЕЖИМОВ
 
 /* USER CODE END PV */
 
@@ -98,7 +88,6 @@ volatile uint8_t global_hue = 127;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_USART2_UART_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
@@ -142,26 +131,12 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USB_DEVICE_Init();
-  MX_USART2_UART_Init();
   MX_SPI1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
-
-	// Запускаем UART (связь с соседом)
-	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
-
-
-	// Запускаем Ethernet////W5500
 	App_Ethernet_Init();
-
-
-///ЛЕНТА
-	WS2812_Init();
-
-
-
-
+    WS2812_Init();
 
   /* USER CODE END 2 */
 
@@ -171,15 +146,8 @@ int main(void)
 	while (1) {
 
 		App_Ethernet_Process();
-		Process_USB_To_Interfaces();
-		Process_UART_Communication();
 		Ethernet_UDP_Periodic_Task();
-		// Неблокирующая анимация ленты
-		    WS2812_Process_Dynamic_Run();
-
-
-
-
+	    WS2812_Process_Dynamic_Run();
 
 	}
 
@@ -324,39 +292,6 @@ static void MX_TIM2_Init(void)
 }
 
 /**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART2_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
-  huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
-  huart2.Init.Mode = UART_MODE_TX_RX;
-  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART2_Init 2 */
-
-  /* USER CODE END USART2_Init 2 */
-
-}
-
-/**
   * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
@@ -415,27 +350,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	if (huart->Instance == USART2) {
-	        if (uart_rx_data == '$') {           // Увидели начало пакета
-	        	uart_rx_index = 0;               // Сбрасываем индекс
-	        	uart_is_collecting = true;       // Начинаем копить
-	        	uart_msg_ready = 0;              // Старый пакет больше не важен
-	        }
-	        else if (uart_is_collecting) {       // Если мы уже "в процессе"
-	            if (uart_rx_data == '\n') {      // Увидели конец
-	            	uart_rx_buffer[uart_rx_index] = '\0';
-	                uart_is_collecting = false;
-	                uart_msg_ready = 1;          // Пакет готов к обработке!
-	            } else {
-	            	uart_rx_buffer[uart_rx_index++] = uart_rx_data;
-	                if (uart_rx_index >= 60) uart_rx_index = 0; // Защита от переполнения
-	            }
-	        }
 
-	        HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1); // Ждем следующий байт
-	    }
-	}
 /* USER CODE END 4 */
 
 /**
