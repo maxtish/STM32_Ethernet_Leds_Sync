@@ -146,7 +146,6 @@ int main(void)
 	while (1) {
 
 		App_Ethernet_Process();
-		Ethernet_UDP_Periodic_Task();
 	    WS2812_Process_Dynamic_Run();
 
 	}

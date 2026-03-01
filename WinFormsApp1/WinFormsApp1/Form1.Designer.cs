@@ -88,6 +88,7 @@
             picColorWheel.SizeMode = PictureBoxSizeMode.Zoom;
             picColorWheel.TabIndex = 5;
             picColorWheel.TabStop = false;
+            picColorWheel.Click += picColorWheel_Click;
             picColorWheel.Paint += PicColorWheel_Paint;
             picColorWheel.MouseDown += ColorWheel_Interaction;
             picColorWheel.MouseMove += ColorWheel_Interaction;

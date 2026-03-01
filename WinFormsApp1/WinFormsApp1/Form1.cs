@@ -38,14 +38,14 @@ namespace WinFormsApp1
             trackBarValue.Scroll += trackBarValue_Scroll;
             CheckForIllegalCrossThreadCalls = false;
 
-        
+
 
 
             StartListening();
         }
 
-    
-       
+
+
 
         private void ColorWheel_Interaction(object sender, MouseEventArgs e)
         {
@@ -242,7 +242,7 @@ namespace WinFormsApp1
                     }
                 }
 
-               
+
 
                 catch { /* Ошибка формата данных */ }
             }));
@@ -276,7 +276,7 @@ namespace WinFormsApp1
             });
         }
 
-        
+
 
         private void button1_Click(object sender, EventArgs e) => SendCommand("$BTN");
 
@@ -357,5 +357,9 @@ namespace WinFormsApp1
 
         }
 
+        private void picColorWheel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

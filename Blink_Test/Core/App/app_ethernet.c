@@ -28,11 +28,14 @@ static void Get_Unique_MAC(uint8_t *mac_array);
 static void cb_ip_assigned(void);
 static void cb_ip_conflict(void);
 
+
 static void Process_Ethernet_Server(void);
+static void Ethernet_UDP_Periodic_Task(void);
 static void handle_pc_socket(uint8_t sn, uint16_t port);
 static void handle_encoder_socket(uint8_t sn, uint16_t port);
 static void Parse_Ethernet_Commands(char *data_ptr, uint8_t sn);
 static void Ethernet_UDP_Status(void);
+
 
 
 
@@ -155,6 +158,7 @@ void App_Ethernet_Process(void) {
 	uint8_t ret = DHCP_run();
 
 	if (ret == DHCP_IP_LEASED || ret == DHCP_IP_CHANGED) {
+		Ethernet_UDP_Periodic_Task();
 		Process_Ethernet_Server();
 
 

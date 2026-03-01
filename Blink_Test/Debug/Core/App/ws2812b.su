@@ -1,3 +1,0 @@
-../Core/App/ws2812b.c:73:13:WS2812_SetSimpleColor.part.0	12	static
-../Core/App/ws2812b.c:28:6:WS2812_Init	0	static
-../Core/App/ws2812b.c:33:6:WS2812_Process_Dynamic_Run	24	static
