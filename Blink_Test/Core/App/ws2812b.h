@@ -2,10 +2,11 @@
 #define WS2812B_H
 
 #include "main.h"
+#include "app_usb_log.h"
 
 #define LED_COUNT 144
-#define PWM_HI    40
-#define PWM_LO    20
+#define PWM_HI    38
+#define PWM_LO    17
 #define RESET_LEN 50
 
 extern volatile uint8_t global_brightness;

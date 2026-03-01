@@ -62,6 +62,7 @@ void WS2812_Process_Dynamic_Run(void) {
 
 
 static void WS2812_Send(void) {
+
 	// Запускаем передачу через DMA. TIM_CHANNEL_1 должен совпадать с CubeMX
 	HAL_TIM_PWM_Start_DMA(&htim2, TIM_CHANNEL_1, (uint32_t*) led_buffer,
 			(LED_COUNT * 24) + RESET_LEN);
@@ -89,26 +90,33 @@ static void Get_Color_Data(uint8_t hue, uint8_t bright, uint8_t *r, uint8_t *g,
 	uint8_t r_raw, g_raw, b_raw;
 
 	// Секторный расчет (0-255)
-	if (hue < 85) {
-		r_raw = 255 - hue * 3;
-		g_raw = hue * 3;
-		b_raw = 0;
-	} else if (hue < 170) {
-		hue -= 85;
-		r_raw = 0;
-		g_raw = 255 - hue * 3;
-		b_raw = hue * 3;
-	} else {
-		hue -= 170;
-		r_raw = hue * 3;
-		g_raw = 0;
-		b_raw = 255 - hue * 3;
-	}
+	if (hue < 85 ) {
+	        r_raw = 255 - (hue * 3);
+	        g_raw = hue * 3;
+	        b_raw = 0;
+	    } else if (hue < 170) {
+	        uint8_t h = hue - 85;
+	        r_raw = 0;
+	        g_raw = 255 - (h * 3);
+	        b_raw = h * 3;
+	    } else {
+	        uint8_t h = hue - 170;
+	        r_raw = h * 3;
+	        g_raw = 0;
+	        b_raw = 255 - (h * 3);
+	    }
+
+
+	    if (r_raw > 255) r_raw = 255;
+	    if (g_raw > 255) g_raw = 255;
+	    if (b_raw > 255) b_raw = 255;
+
 
 	// Применяем глобальную яркость
 	// Математика: (Цвет * Яркость) / 255 (">> 8" == "/256")
 	*r = (uint8_t) ((r_raw * bright) >> 8);
 	*g = (uint8_t) ((g_raw * bright) >> 8);
 	*b = (uint8_t) ((b_raw * bright) >> 8);
+
 }
 
