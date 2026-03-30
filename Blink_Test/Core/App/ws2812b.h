@@ -2,7 +2,6 @@
 #define WS2812B_H
 
 #include "main.h"
-#include "app_usb_log.h"
 
 #define LED_COUNT 144
 #define PWM_HI    38
