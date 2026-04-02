@@ -5,16 +5,14 @@ import { DeviceSettings } from '../types/settings';
 import { encodeSettings } from '../utils/parser';
 import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
 
-// Описываем пропсы для основного компонента
+const ARCTOS_RED = '#D32F2F';
+const ARCTOS_DARK_CARD = '#222222';
+
 interface EditorProps {
   initialSettings: DeviceSettings;
-  onSave?: (data: DeviceSettings) => void;
 }
 
-export const DeviceSettingsEditor = ({
-  initialSettings,
-  onSave, // Добавляем деструктуризацию onSave
-}: EditorProps) => {
+export const DeviceSettingsEditor = ({ initialSettings }: EditorProps) => {
   const [settings, setSettings] = useState<DeviceSettings>(initialSettings);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -37,15 +35,11 @@ export const DeviceSettingsEditor = ({
 
       await NfcManager.requestTechnology(NfcTech.Ndef);
       await NfcManager.ndefHandler.writeNdefMessage(bytesToWrite);
-
-      Alert.alert('Успех', 'Настройки переданы на STM32');
-
-      // Вызываем коллбэк, если он передан из App.tsx
-      if (onSave) {
-        onSave(settings);
-      }
     } catch (ex) {
-      Alert.alert('Ошибка', 'Убедитесь, что телефон плотно прижат к антенне');
+      Alert.alert(
+        'IO ERROR',
+        'NFC connection lost. Secure the device closer to the antenna.',
+      );
     } finally {
       NfcManager.cancelTechnologyRequest();
       setIsSaving(false);
@@ -54,38 +48,50 @@ export const DeviceSettingsEditor = ({
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Управление лентой</Text>
+      <Text style={styles.title}>PARAMETER OVERRIDE</Text>
 
       <SettingSlider
-        label="Задержка (скорость)"
+        label="ENGINE SPEED (delay)"
         value={settings.speed}
-        onValueChange={(v: number) => updateField('speed', v)} // Явно указываем (v: number)
+        onValueChange={(v: number) => updateField('speed', v)}
       />
 
       <View style={styles.colorGroup}>
-        <Text style={styles.label}>Цвет (Hue): {settings.hue}</Text>
-        <View
-          style={[
-            styles.preview,
-            {
-              backgroundColor: `hsl(${(settings.hue / 255) * 360}, 100%, 50%)`,
-            },
-          ]}
-        />
+        <View style={styles.labelRow}>
+          <Text style={styles.label}>COLOR HUE</Text>
+          <Text style={styles.valueLabel}>{settings.hue} nm/idx</Text>
+        </View>
+
+        <View style={styles.previewContainer}>
+          <View
+            style={[
+              styles.preview,
+              {
+                backgroundColor: `hsl(${
+                  (settings.hue / 255) * 360
+                }, 100%, 50%)`,
+                shadowColor: `hsl(${(settings.hue / 255) * 360}, 100%, 50%)`,
+              },
+            ]}
+          />
+        </View>
+
         <Slider
           style={{ width: '100%', height: 40 }}
           minimumValue={0}
           maximumValue={255}
           value={settings.hue}
-          onValueChange={(v: number) => updateField('hue', v)} // Явно указываем (v: number)
-          minimumTrackTintColor="#FF0000"
+          onValueChange={(v: number) => updateField('hue', v)}
+          minimumTrackTintColor={ARCTOS_RED}
+          maximumTrackTintColor="#444"
+          thumbTintColor="#FFF"
         />
       </View>
 
       <SettingSlider
-        label="Общая яркость"
+        label="BEAM INTENSITY"
         value={settings.brightness}
-        onValueChange={(v: number) => updateField('brightness', v)} // Явно указываем (v: number)
+        onValueChange={(v: number) => updateField('brightness', v)}
       />
 
       <TouchableOpacity
@@ -94,14 +100,13 @@ export const DeviceSettingsEditor = ({
         disabled={isSaving}
       >
         <Text style={styles.saveText}>
-          {isSaving ? 'ПЕРЕДАЧА...' : 'ОБНОВИТЬ ПО NFC'}
+          {isSaving ? 'UPLOADING...' : 'COMMIT CHANGES'}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-// Вспомогательный компонент с типизацией
 interface SettingSliderProps {
   label: string;
   value: number;
@@ -110,49 +115,92 @@ interface SettingSliderProps {
 
 const SettingSlider = ({ label, value, onValueChange }: SettingSliderProps) => (
   <View style={styles.sliderRow}>
-    <Text style={styles.label}>
-      {label}: {value}
-    </Text>
+    <View style={styles.labelRow}>
+      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.valueLabel}>{value}</Text>
+    </View>
     <Slider
       style={{ width: '100%', height: 40 }}
       minimumValue={1}
       maximumValue={255}
       value={value}
       onValueChange={onValueChange}
+      minimumTrackTintColor={ARCTOS_RED}
+      maximumTrackTintColor="#444"
+      thumbTintColor="#FFF"
     />
   </View>
 );
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    elevation: 3,
+    padding: 20,
+    backgroundColor: ARCTOS_DARK_CARD,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#333',
+    marginVertical: 10,
   },
-  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
-  sliderRow: { marginVertical: 10 },
-  label: { fontSize: 14, color: '#333', marginBottom: 5 },
+  title: {
+    fontSize: 14,
+    fontWeight: '900',
+    marginBottom: 20,
+    color: '#FFF',
+    letterSpacing: 2,
+    borderLeftWidth: 3,
+    borderLeftColor: ARCTOS_RED,
+    paddingLeft: 10,
+  },
+  sliderRow: { marginVertical: 12 },
+  labelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  label: { fontSize: 11, color: '#AAA', letterSpacing: 1, fontWeight: 'bold' },
+  valueLabel: {
+    fontSize: 12,
+    color: ARCTOS_RED,
+    fontWeight: 'bold',
+    fontFamily: 'monospace',
+  },
   colorGroup: {
-    padding: 10,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 8,
+    padding: 15,
+    backgroundColor: '#1A1A1A',
+    borderRadius: 10,
+    marginVertical: 15,
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+  },
+  previewContainer: {
+    alignItems: 'center',
     marginVertical: 10,
   },
   preview: {
-    height: 40,
-    borderRadius: 20,
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#fff',
+    height: 16,
+    width: '100%',
+    borderRadius: 3,
+    borderWidth: 0,
+    // Свечение а-ля лазерный луч
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   saveButton: {
-    backgroundColor: '#007AFF',
-    padding: 15,
-    borderRadius: 8,
+    backgroundColor: ARCTOS_RED,
+    padding: 18,
+    borderRadius: 4,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 15,
+    borderBottomWidth: 4,
+    borderBottomColor: '#8B0000',
   },
-  saveText: { color: '#fff', fontWeight: 'bold' },
+  saveText: {
+    color: '#fff',
+    fontWeight: '900',
+    letterSpacing: 2,
+    fontSize: 14,
+  },
 });

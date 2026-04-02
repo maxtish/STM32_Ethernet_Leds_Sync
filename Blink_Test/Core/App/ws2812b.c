@@ -26,10 +26,10 @@ void WS2812_Init(void) {
 	memset(led_buffer, 0, sizeof(led_buffer));
 }
 
-
 void WS2812_Process_Dynamic_Run(void) {
-	// Регулируем скорость бега (например, каждые 30 мс)
-	if (HAL_GetTick() - last_step_time < global_speed) {
+	uint32_t current_delay = MAX_DELAY - global_speed;
+
+	if (HAL_GetTick() - last_step_time < current_delay) {
 		return;
 	}
 	last_step_time = HAL_GetTick();

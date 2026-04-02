@@ -1,55 +1,38 @@
 import { DeviceSettings } from '../types/settings';
 
-/**
- * Ищет и извлекает настройки из сырого массива байтов NFC метки.
- * Использует алгоритм поиска по контрольной сумме (CRC),
- * так как данные могут быть смещены из-за NDEF заголовков.
- */
-export const parseNfcPayload = (payload: number[]): DeviceSettings | null => {
-  // Нам нужно как минимум 4 байта (Speed, Hue, Brightness, CRC)
-  if (!payload || payload.length < 4) return null;
+export const encodeSettings = (settings: DeviceSettings): number[] => {
+  const speed = Math.floor(settings.speed);
+  const hue = Math.floor(settings.hue);
+  const brightness = Math.floor(settings.brightness);
+  const signature = 0xaa; // "Магическое число"
 
-  // Проходим циклом по всему массиву байтов, ища валидный кадр
-  for (let i = 0; i <= payload.length - 4; i++) {
-    const speed = payload[i];
-    const hue = payload[i + 1];
-    const brightness = payload[i + 2];
-    const checksum = payload[i + 3];
+  // Считаем CRC по всем 4 компонентам
+  const checksum = signature ^ speed ^ hue ^ brightness;
 
-    // Считаем XOR для первых трех байт
-    const calculated = speed ^ hue ^ brightness;
-
-    // Проверяем: совпала ли сумма и не являются ли данные пустыми (0x00 или 0xFF)
-    if (calculated === checksum && speed !== 0 && speed !== 255) {
-      console.log(`[NFC Parser] Данные успешно найдены на смещении: ${i}`);
-      return {
-        speed: speed,
-        hue: hue,
-        brightness: brightness,
-      };
-    }
-  }
-
-  console.log('[NFC Parser] Валидный пакет настроек не обнаружен');
-  return null;
+  // Возвращаем ПЯТЬ байт
+  return [signature, speed, hue, brightness, checksum];
 };
 
-/**
- * Кодирует настройки в компактный 4-байтовый массив для записи.
- * Формат: [Speed, Hue, Brightness, CRC]
- */
-export const encodeSettings = (settings: DeviceSettings): number[] => {
-  const payload = [
-    Math.floor(settings.speed),
-    Math.floor(settings.hue),
-    Math.floor(settings.brightness),
-  ];
+export const parseNfcPayload = (payload: number[]): DeviceSettings | null => {
+  // Теперь ищем кадр из 5 байт
+  if (!payload || payload.length < 5) return null;
 
-  // Считаем контрольную сумму (XOR)
-  const checksum = payload[0] ^ payload[1] ^ payload[2];
+  for (let i = 0; i <= payload.length - 5; i++) {
+    const sig = payload[i];
+    const speed = payload[i + 1];
+    const hue = payload[i + 2];
+    const brightness = payload[i + 3];
+    const checksum = payload[i + 4];
 
-  // Добавляем CRC четвертым байтом
-  payload.push(checksum);
+    // Проверяем подпись ПЕРВОЙ
+    if (sig === 0xaa) {
+      const calculated = sig ^ speed ^ hue ^ brightness;
 
-  return payload;
+      if (calculated === checksum) {
+        console.log(`[NFC] Valid Arctos frame found at offset ${i}`);
+        return { speed, hue, brightness };
+      }
+    }
+  }
+  return null;
 };

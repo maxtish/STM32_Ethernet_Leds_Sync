@@ -7,7 +7,7 @@
 #define PWM_HI    38
 #define PWM_LO    17
 #define RESET_LEN 50
-
+#define MAX_DELAY 255
 
 
 

@@ -3,8 +3,9 @@
 
 #include "main.h"
 
-// Адрес для данных (0x53 << 1)
 #define ST25_ADDR_DATA 0xA6
+#define ST25_ADDR_SYS  0xAE
+
 
 // Компактная структура: 3 байта данных + 1 байт CRC
 typedef struct {
@@ -16,5 +17,6 @@ typedef struct {
 
 void App_NFC_Init(void);
 void App_NFC_Process_Settings(void);
+void App_NFC_Sync_Settings(void);
 
 #endif

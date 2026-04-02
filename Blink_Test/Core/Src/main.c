@@ -131,11 +131,12 @@ int main(void)
   MX_TIM2_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-
-	App_Ethernet_Init();
-    WS2812_Init();
     App_NFC_Init();
-    App_NFC_Process_Settings();
+    WS2812_Init();
+	App_Ethernet_Init();
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -144,10 +145,9 @@ int main(void)
 	while (1) {
 
 		App_NFC_Process_Settings();
-
-
+		WS2812_Process_Dynamic_Run();
 		App_Ethernet_Process();
-	    WS2812_Process_Dynamic_Run();
+
 
 	}
 
