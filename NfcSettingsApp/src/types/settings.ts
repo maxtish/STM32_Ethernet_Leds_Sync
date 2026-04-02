@@ -1,8 +1,6 @@
 export interface DeviceSettings {
   speed: number;
-  red: number;
-  green: number;
-  blue: number;
+  hue: number;
   brightness: number;
 }
 

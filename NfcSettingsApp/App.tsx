@@ -6,19 +6,34 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { useNfc } from './src/hooks/useNfc';
 import { NfcRawDetails } from './src/components/NfcRawDetails';
 import { DeviceSettingsEditor } from './src/components/DeviceSettingsEditor';
-
+import { DeviceSettings } from './src/types/settings';
+const defaultSettings: DeviceSettings = {
+  speed: 800,
+  hue: 155,
+  brightness: 128,
+};
 const App = () => {
-  const { nfcData, loading, scanTag } = useNfc();
+  const { nfcData, loading, scanTag, writeTag } = useNfc();
   const [showEditor, setShowEditor] = useState(false);
 
   // Сбрасываем состояние редактора при новом сканировании
   const handleScan = () => {
     setShowEditor(false);
     scanTag();
+  };
+
+  const handleInitTag = async () => {
+    const success = await writeTag(defaultSettings);
+    if (success) {
+      Alert.alert('Метка успешно прошита! Теперь нажми Скан.');
+    } else {
+      Alert.alert('Ошибка записи. Убедись, что метка вплотную к телефону.');
+    }
   };
 
   return (
@@ -34,7 +49,7 @@ const App = () => {
         <View style={styles.resultContainer}>
           {/* Секция 1: Сырые данные (показываем всегда) */}
           <Text style={styles.sectionTitle}>Информация о чипе:</Text>
-          <NfcRawDetails data={nfcData.raw} />
+          <NfcRawDetails data={nfcData} />
 
           {/* Секция 2: Проверка совместимости */}
           <View style={styles.statusBox}>
@@ -44,7 +59,11 @@ const App = () => {
                 : '❌ Данные не распознаны как настройки'}
             </Text>
           </View>
-
+          <Button
+            title="Прошить эту метку под STM32"
+            onPress={handleInitTag}
+            color="#28a745"
+          />
           {/* Секция 3: Кнопка входа в настройки */}
           {nfcData.isCompatible && !showEditor && (
             <TouchableOpacity

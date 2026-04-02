@@ -58,12 +58,19 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+extern I2C_HandleTypeDef hi2c1;
+extern volatile uint8_t global_brightness;
+extern volatile uint8_t global_hue;
+extern volatile uint8_t global_speed;
+extern volatile uint8_t nfc_event_flag;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 #define W5500_CS_Pin_Pin GPIO_PIN_4
 #define W5500_CS_Pin_GPIO_Port GPIOA
+#define ST25DV_GPO_Pin GPIO_PIN_0
+#define ST25DV_GPO_GPIO_Port GPIOB
+#define ST25DV_GPO_EXTI_IRQn EXTI0_IRQn
 #define W5500_RST_Pin_Pin GPIO_PIN_8
 #define W5500_RST_Pin_GPIO_Port GPIOA
 

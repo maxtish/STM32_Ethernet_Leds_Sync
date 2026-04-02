@@ -8,8 +8,8 @@
 #define PWM_LO    17
 #define RESET_LEN 50
 
-extern volatile uint8_t global_brightness;
-extern volatile uint8_t global_hue;
+
+
 
 
 void WS2812_Init(void);

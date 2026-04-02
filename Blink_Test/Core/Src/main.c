@@ -28,7 +28,7 @@
 #include "socket.h"
 #include "app_usb_log.h"
 #include "app_led.h"
-
+#include "app_nfc.h"
 #include "app_ethernet.h"
 
 #include <stdbool.h>
@@ -57,6 +57,8 @@ extern uint8_t rx_data;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+I2C_HandleTypeDef hi2c1;
+
 SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim2;
@@ -64,23 +66,16 @@ DMA_HandleTypeDef hdma_tim2_ch1;
 
 /* USER CODE BEGIN PV */
 
-/*
-uint8_t ethernet_tx_wait_text_flag = 0; //import в app_usb_logic.c  Флаг события для ETHERNET на начало сбора текста и мигания диода на отправляющей плате
-uint8_t text_buffer[128];        //import в app_uart_data  Массив для хранения текста
-uint8_t ethernet_text_buffer[128];     //import в app_usb_logic.c Массив для хранения текстадля ethernet
-uint8_t text_index = 0;          // import в app_uart_data Текущая позиция в массиве
-uint8_t ethernet_text_index = 0;        //import в app_usb_logic.c Текущая позиция в массиве для ethernet
-uint8_t rx_buf[1024]; // import в app_ethernet.c - буфер ПРИЕМ ДАННЫХ ИЗ ETHERNET
-uint8_t neighbor_ip[4] = {0, 0, 0, 0}; // Сюда сохраним адрес соседа
-///ДЛЯ UART app_uart_data
-uint8_t uart_rx_data;
-uint8_t uart_rx_buffer[64];
-uint8_t uart_rx_index = 0;
-bool uart_is_collecting = false;
-volatile uint8_t uart_msg_ready = 0;
-*/
+
 
 EditTarget_t current_edit_target = EDIT_BRIGHTNESS; ////ДЛЯ РЕЖИМОВ
+
+volatile uint8_t global_brightness = 50;
+volatile uint8_t global_hue = 127;
+volatile uint8_t global_speed = 30;
+volatile uint8_t nfc_event_flag = 0;
+
+
 
 /* USER CODE END PV */
 
@@ -90,6 +85,7 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -133,17 +129,22 @@ int main(void)
   MX_USB_DEVICE_Init();
   MX_SPI1_Init();
   MX_TIM2_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
 	App_Ethernet_Init();
     WS2812_Init();
-
+    App_NFC_Init();
+    App_NFC_Process_Settings();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
 	while (1) {
+
+		App_NFC_Process_Settings();
+
 
 		App_Ethernet_Process();
 	    WS2812_Process_Dynamic_Run();
@@ -201,6 +202,40 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
+
 }
 
 /**
@@ -322,6 +357,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
@@ -343,12 +379,28 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : ST25DV_GPO_Pin */
+  GPIO_InitStruct.Pin = ST25DV_GPO_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(ST25DV_GPO_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+    if (GPIO_Pin == ST25DV_GPO_Pin) {
+        nfc_event_flag = 1;
+        HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13); // Мигнуть диодом
+    }
+}
 
 /* USER CODE END 4 */
 

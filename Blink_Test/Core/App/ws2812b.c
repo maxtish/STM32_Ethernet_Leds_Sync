@@ -1,9 +1,6 @@
 #include "ws2812b.h"
 #include <string.h>
-
-
-volatile uint8_t global_brightness = 50;
-volatile uint8_t global_hue = 127;
+#include "main.h"
 
 extern TIM_HandleTypeDef htim2; // таймер
 
@@ -32,7 +29,7 @@ void WS2812_Init(void) {
 
 void WS2812_Process_Dynamic_Run(void) {
 	// Регулируем скорость бега (например, каждые 30 мс)
-	if (HAL_GetTick() - last_step_time < 30) {
+	if (HAL_GetTick() - last_step_time < global_speed) {
 		return;
 	}
 	last_step_time = HAL_GetTick();
@@ -42,7 +39,7 @@ void WS2812_Process_Dynamic_Run(void) {
 
 	Get_Color_Data(global_hue, global_brightness, &r, &g, &b);
 
-	// 2. Очищаем буфер (выключаем все диоды в памяти)
+	// 2. Очищаем буфер (выключаем все диоды в памяти)s
 	for (int i = 0; i < LED_COUNT; i++) {
 		WS2812_SetSimpleColor(i, 0, 0, 0); // Специальная функция без Send внутри
 	}

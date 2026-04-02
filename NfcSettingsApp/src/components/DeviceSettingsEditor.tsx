@@ -5,19 +5,16 @@ import { DeviceSettings } from '../types/settings';
 import { encodeSettings } from '../utils/parser';
 import NfcManager, { Ndef, NfcTech } from 'react-native-nfc-manager';
 
-interface SettingSliderProps {
-  label: string;
-  value: number;
-  onValueChange: (value: number) => void; // Типизируем функцию обратного вызова
-  color?: string;
-}
-
-interface Props {
+// Описываем пропсы для основного компонента
+interface EditorProps {
   initialSettings: DeviceSettings;
   onSave?: (data: DeviceSettings) => void;
 }
 
-export const DeviceSettingsEditor = ({ initialSettings }: Props) => {
+export const DeviceSettingsEditor = ({
+  initialSettings,
+  onSave, // Добавляем деструктуризацию onSave
+}: EditorProps) => {
   const [settings, setSettings] = useState<DeviceSettings>(initialSettings);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -28,10 +25,8 @@ export const DeviceSettingsEditor = ({ initialSettings }: Props) => {
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      // 1. Подготавливаем байты (наша логика с CRC)
       const bytes = encodeSettings(settings);
 
-      // 2. Создаем NDEF запись
       const record = Ndef.record(
         Ndef.TNF_MIME_MEDIA,
         'application/octet-stream',
@@ -40,14 +35,17 @@ export const DeviceSettingsEditor = ({ initialSettings }: Props) => {
       );
       const bytesToWrite = Ndef.encodeMessage([record]);
 
-      // 3. Запись
       await NfcManager.requestTechnology(NfcTech.Ndef);
       await NfcManager.ndefHandler.writeNdefMessage(bytesToWrite);
 
-      Alert.alert('Успех', 'Настройки сохранены в память ST25DV');
+      Alert.alert('Успех', 'Настройки переданы на STM32');
+
+      // Вызываем коллбэк, если он передан из App.tsx
+      if (onSave) {
+        onSave(settings);
+      }
     } catch (ex) {
-      console.warn(ex);
-      Alert.alert('Ошибка', 'Не удалось записать данные. Попробуйте еще раз.');
+      Alert.alert('Ошибка', 'Убедитесь, что телефон плотно прижат к антенне');
     } finally {
       NfcManager.cancelTechnologyRequest();
       setIsSaving(false);
@@ -56,47 +54,38 @@ export const DeviceSettingsEditor = ({ initialSettings }: Props) => {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.title}>Настройки устройства</Text>
+      <Text style={styles.title}>Управление лентой</Text>
 
       <SettingSlider
-        label="Скорость"
+        label="Задержка (скорость)"
         value={settings.speed}
-        onValueChange={v => updateField('speed', v)}
+        onValueChange={(v: number) => updateField('speed', v)} // Явно указываем (v: number)
       />
 
       <View style={styles.colorGroup}>
+        <Text style={styles.label}>Цвет (Hue): {settings.hue}</Text>
         <View
           style={[
             styles.preview,
             {
-              backgroundColor: `rgb(${settings.red},${settings.green},${settings.blue})`,
+              backgroundColor: `hsl(${(settings.hue / 255) * 360}, 100%, 50%)`,
             },
           ]}
         />
-        <SettingSlider
-          label="R"
-          color="#ff4444"
-          value={settings.red}
-          onValueChange={v => updateField('red', v)}
-        />
-        <SettingSlider
-          label="G"
-          color="#44ff44"
-          value={settings.green}
-          onValueChange={v => updateField('green', v)}
-        />
-        <SettingSlider
-          label="B"
-          color="#4444ff"
-          value={settings.blue}
-          onValueChange={v => updateField('blue', v)}
+        <Slider
+          style={{ width: '100%', height: 40 }}
+          minimumValue={0}
+          maximumValue={255}
+          value={settings.hue}
+          onValueChange={(v: number) => updateField('hue', v)} // Явно указываем (v: number)
+          minimumTrackTintColor="#FF0000"
         />
       </View>
 
       <SettingSlider
-        label="Яркость"
+        label="Общая яркость"
         value={settings.brightness}
-        onValueChange={v => updateField('brightness', v)}
+        onValueChange={(v: number) => updateField('brightness', v)} // Явно указываем (v: number)
       />
 
       <TouchableOpacity
@@ -105,29 +94,30 @@ export const DeviceSettingsEditor = ({ initialSettings }: Props) => {
         disabled={isSaving}
       >
         <Text style={styles.saveText}>
-          {isSaving ? 'ЗАПИСЬ...' : 'СОХРАНИТЬ В МЕТКУ'}
+          {isSaving ? 'ПЕРЕДАЧА...' : 'ОБНОВИТЬ ПО NFC'}
         </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-const SettingSlider = ({
-  label,
-  value,
-  onValueChange,
-  color = '#007AFF',
-}: SettingSliderProps) => (
+// Вспомогательный компонент с типизацией
+interface SettingSliderProps {
+  label: string;
+  value: number;
+  onValueChange: (v: number) => void;
+}
+
+const SettingSlider = ({ label, value, onValueChange }: SettingSliderProps) => (
   <View style={styles.sliderRow}>
     <Text style={styles.label}>
       {label}: {value}
     </Text>
     <Slider
       style={{ width: '100%', height: 40 }}
-      minimumValue={0}
+      minimumValue={1}
       maximumValue={255}
       value={value}
-      minimumTrackTintColor={color}
       onValueChange={onValueChange}
     />
   </View>
@@ -140,32 +130,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 12,
     elevation: 3,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
   },
-  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, color: '#333' },
-  sliderRow: { marginVertical: 8 },
-  label: { fontSize: 14, color: '#666' },
+  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
+  sliderRow: { marginVertical: 10 },
+  label: { fontSize: 14, color: '#333', marginBottom: 5 },
   colorGroup: {
     padding: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f9f9f9',
     borderRadius: 8,
     marginVertical: 10,
   },
   preview: {
-    height: 30,
-    borderRadius: 15,
+    height: 40,
+    borderRadius: 20,
     marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderWidth: 2,
+    borderColor: '#fff',
   },
   saveButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: 10,
   },
   saveText: { color: '#fff', fontWeight: 'bold' },
 });

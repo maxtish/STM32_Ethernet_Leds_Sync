@@ -1,49 +1,80 @@
-import { useState, useEffect } from 'react';
-import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
-import { NfcData } from '../types/settings';
-import { parseNfcPayload } from '../utils/parser';
+import { useState } from 'react';
+import NfcManager, { NfcTech, Ndef } from 'react-native-nfc-manager';
+import { DeviceSettings, NfcData } from '../types/settings';
+import { encodeSettings, parseNfcPayload } from '../utils/parser';
 
 export const useNfc = () => {
-  const [nfcData, setNfcData] = useState<NfcData | null>(null);
+  const [nfcData, setNfcData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    NfcManager.setEventListener(NfcEvents.DiscoverTag, (tag: any) => {
-      let payload: number[] = [];
+  const writeTag = async (settings: DeviceSettings) => {
+    try {
+      setLoading(true);
+      await NfcManager.requestTechnology(NfcTech.Ndef);
 
-      // Ищем NDEF данные более тщательно
-      if (tag.ndefMessage && tag.ndefMessage.length > 0) {
-        payload = Array.from(tag.ndefMessage[0].payload);
+      // Подготавливаем наши 5 байт + 1 байт CRC
+      const settingsBytes = encodeSettings(settings);
+
+      // Используем TNF_MIME_MEDIA, чтобы минимизировать лишние заголовки
+      // Тип 'application/octet-stream' — это стандарт для сырых байтов
+      const record = Ndef.record(
+        Ndef.TNF_MIME_MEDIA,
+        'application/octet-stream',
+        [],
+        settingsBytes,
+      );
+
+      const bytesToWrite = Ndef.encodeMessage([record]);
+
+      if (bytesToWrite) {
+        await NfcManager.ndefHandler.writeNdefMessage(bytesToWrite);
+        return true;
       }
-
-      const settings = parseNfcPayload(payload);
-
-      setNfcData({
-        raw: JSON.stringify(tag, null, 2),
-        isCompatible: !!settings,
-        settings: settings || undefined,
-      });
-
-      NfcManager.unregisterTagEvent().catch(() => null);
+      return false;
+    } catch (ex) {
+      console.warn('Write Error:', ex);
+      return false;
+    } finally {
+      NfcManager.cancelTechnologyRequest();
       setLoading(false);
-    });
-
-    return () => {
-      NfcManager.setEventListener(NfcEvents.DiscoverTag, null);
-    };
-  }, []);
+    }
+  };
 
   const scanTag = async () => {
     try {
       setLoading(true);
       setNfcData(null);
-      // Регистрируем событие для любого типа тегов
-      await NfcManager.registerTagEvent();
+
+      // Запрашиваем поддержку базовых технологий (Ndef для данных, NfcV для ST25DV)
+      await NfcManager.requestTechnology([NfcTech.Ndef, NfcTech.NfcV]);
+
+      const tag = await NfcManager.getTag();
+
+      if (tag) {
+        let payload: number[] = [];
+        if (tag.ndefMessage && tag.ndefMessage.length > 0) {
+          payload = Array.from(tag.ndefMessage[0].payload);
+        }
+
+        const settings = parseNfcPayload(payload);
+
+        setNfcData({
+          id: tag.id || 'Неизвестный ID',
+          techTypes: tag.techTypes || [],
+          isCompatible: !!settings,
+          settings: settings || undefined,
+          // Сохраняем весь текст для отладки в сыром виде
+          raw: JSON.stringify(tag, null, 2),
+        });
+      }
     } catch (ex) {
-      console.warn('NFC Scan Error:', ex);
+      console.warn('Ошибка сканирования:', ex);
+    } finally {
+      // Обязательно закрываем сессию, чтобы антенна не работала впустую
+      NfcManager.cancelTechnologyRequest();
       setLoading(false);
     }
   };
 
-  return { nfcData, loading, scanTag };
+  return { nfcData, loading, scanTag, writeTag };
 };
